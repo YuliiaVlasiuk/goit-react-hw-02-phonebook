@@ -11,15 +11,12 @@ display: flex;
 gap:20px;
 flex-direction: column;
 width: 450px;
-padding: 50px;
+padding: 10px;
 border: 1px solid black;
 border-radius:4px;
-margin:0 auto;
-margin-top:50px
-
 `
 export const FormField =styled.label`
-gap:4px;'
+gap:4px;
 display: flex;
 flex-direction: column;
 

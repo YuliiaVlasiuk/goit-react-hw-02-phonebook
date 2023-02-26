@@ -14,9 +14,8 @@ const phoneSchema = Yup.object().shape({
     )
     .required('Required'),
 
-  number: Yup.number()
-    //    number: Yup.string()
-    //    .matches(/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,`Phone number must be digits and can contain spaces, dashes, parentheses and can start with +`)
+  number: Yup.string()
+    .matches(/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,`Phone number must be digits and can contain spaces, dashes, parentheses and can start with +`)
     .required('Required'),
 });
 
@@ -44,7 +43,7 @@ export const ContactForm = ({ onSubmit }) => {
 
         <FormField>
           Number
-          <Field name="number" />
+          <Field type="tel" name="number"/>
           <ErrorMessage name="number" component="div" />
         </FormField>
 

@@ -1,15 +1,17 @@
 import { GlobalStyle } from './GlobalStyle';
+import Notiflix from 'notiflix';
 import { Component } from 'react';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
+import { Filter } from './Filter/Filter';
 
 export class App extends Component {
   state = {
     contacts: [
-        {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
-        {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
-        {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
-        {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
     name: '',
@@ -17,6 +19,17 @@ export class App extends Component {
   };
 
   addContact = newContact => {
+    const arrayOfContactsName = [];
+
+    for (const contact of this.state.contacts) {
+      arrayOfContactsName.push(contact.name);
+    }
+
+    if (arrayOfContactsName.includes(newContact.name)) {
+      Notiflix.Notify.failure(`${newContact.name} is already in contacts`);
+      return;
+    }
+
     this.setState(prevState => {
       return {
         contacts: [...prevState.contacts, newContact],
@@ -24,39 +37,40 @@ export class App extends Component {
     });
   };
 
+  deleteContact = contactId => {
+    this.setState(prevState => {
+      return {
+        contacts: prevState.contacts.filter(
+          contact => contact.id !== contactId
+        ),
+      };
+    });
+  };
+
   handleInputChange = event => {
-    this.setState({ filter: event.target.value })
-    };
+    this.setState({ filter: event.target.value });
+  };
 
   actualVisibleContact = () => {
-      const { filter, contacts } = this.state;
+    const { filter, contacts } = this.state;
 
-      return contacts.filter(contact =>
-        contact.name.toLowerCase().includes(filter.toLowerCase())
-      );
-    };
-
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
 
   render() {
     const { filter, contacts } = this.state;
     return (
       <div>
-        <h2>Phonebook</h2>
+        <h1>Phonebook</h1>
         <ContactForm onSubmit={this.addContact} />
         <h2>Contacts</h2>
-        <p>Find contacts by name</p>
-
-        <input
-          type="text"
-          value={filter}
-          onChange={this.handleInputChange}
-        ></input> 
-
-
-        {contacts.length>0 ? (
+        <Filter value={filter} onChange={this.handleInputChange} />
+        {contacts.length > 0 ? (
           <ContactList
-         items={this.actualVisibleContact()}
-            // onDelete={this.deleteContacts}
+            items={this.actualVisibleContact()}
+            onDelete={this.deleteContact}
           />
         ) : (
           <p> Phonebook is empty</p>
@@ -66,3 +80,13 @@ export class App extends Component {
     );
   }
 }
+
+
+Notiflix.Notify.init({
+  position: 'center-top',
+  width: '300px',
+  distance: '10px',
+  opacity: 1,
+  rtl: false,
+  timeout: 1000,
+});
